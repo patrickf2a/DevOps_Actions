@@ -1,3 +1,5 @@
+trest bis 
+
 # Exercices : « containeriser » k8s-wordsmith-demo
 
 Le projet k8s-wordsmith-demo est découpé en 3 parties :
