@@ -1,0 +1,41 @@
+name: Build and Push Wordsmith Images
+
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: ['web', 'words', 'db']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build ${{ matrix.service }} image
+        run: docker build -t ${{ matrix.service }} ./${{ matrix.service }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Tag and Push images
+        run: |
+          # Assuming your Docker Hub username is stored in secrets
+          REGISTRY="${{ secrets.DOCKERHUB_USERNAME }}/wordsmith"
+          SERVICE="${{ matrix.service }}"
+          
+          # Tag with three different tags
+          docker tag $SERVICE $REGISTRY:$SERVICE-latest
+          docker tag $SERVICE $REGISTRY:$SERVICE-${{ github.sha }}
+          docker tag $SERVICE $REGISTRY:$SERVICE-pr-${{ github.event.pull_request.number }}
+          
+          # Push all tags
+          docker push $REGISTRY:$SERVICE-latest
+          docker push $REGISTRY:$SERVICE-${{ github.sha }}
+          docker push $REGISTRY:$SERVICE-pr-${{ github.event.pull_request.number }}
