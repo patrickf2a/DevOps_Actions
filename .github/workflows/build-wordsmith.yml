@@ -32,10 +32,10 @@ jobs:
           
           # Tag with three different tags
           docker tag $SERVICE $REGISTRY:$SERVICE-latest
-          docker tag $SERVICE $REGISTRY:$SERVICE-${{ github.sha }}
-          docker tag $SERVICE $REGISTRY:$SERVICE-pr-${{ github.event.pull_request.number }}
+          #docker tag $SERVICE $REGISTRY:$SERVICE-${{ github.sha }}
+          #docker tag $SERVICE $REGISTRY:$SERVICE-pr-${{ github.event.pull_request.number }}
           
           # Push all tags
           docker push $REGISTRY:$SERVICE-latest
-          docker push $REGISTRY:$SERVICE-${{ github.sha }}
-          docker push $REGISTRY:$SERVICE-pr-${{ github.event.pull_request.number }}
+          #docker push $REGISTRY:$SERVICE-${{ github.sha }}
+          #docker push $REGISTRY:$SERVICE-pr-${{ github.event.pull_request.number }}
